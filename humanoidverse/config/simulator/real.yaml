@@ -1,0 +1,8 @@
+# @package _global_
+simulator:
+  _target_: humanoidverse.simulator.stub.Stub   # no physics engine
+  config:
+    name: "real"
+    sim:
+      fps: 250               # matches PBHC training rate :contentReference[oaicite:4]{index=4}
+      control_decimation: 1
