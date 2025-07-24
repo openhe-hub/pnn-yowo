@@ -254,7 +254,7 @@ class PnnPPO(BaseAlgo):
             self._post_epoch_logging(log_dict)
             if it % self.save_interval == 0:
                 self.current_learning_iteration = it
-                self.save(os.path.join(self.log_dir, 'model_{}.pt'.format(it)))
+                self.save(os.path.join(self.log_dir, f'task_{self.task_id}_model_{it}.pt'))
             self.ep_infos.clear()
         
         
