@@ -5,7 +5,7 @@
 * PNN Actor/Critic: /agents/modules/pnn_ppo_modules.py
 * New Env (Support motion switch): /envs/motion_tracking/motion_trackinh.py
 * Training: train_agent_pnn.py
-### How it runs
+### Train
 ```bash
 python humanoidverse/train_agent_pnn.py \
 +simulator=isaacgym +exp=motion_tracking +terrain=terrain_locomotion_plane \
@@ -19,6 +19,12 @@ seed=1 \
 +device=cuda:0
 ```
 * Modify Task List (Motion *.pkl) at: `config/base.yaml`, `pnn.motions`
+### Eval
+```bash
+python humanoidverse/eval_agent_pnn.py +device=cuda:0 +env.config.enforce_randomize_motion_start_eval=False +checkpoint=example/test_task3/task_2_model_0.pt +task_id=2 +motion_id=1
+```
+* ckpt format: `task_{task_id}_model_{epoch_num}`, task id start with 0
+* for PNN, motion_id must <= task_id
 ### Training Steps 
 1. init env
 2. for each task

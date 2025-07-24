@@ -107,14 +107,15 @@ class PnnPPO(BaseAlgo):
         logger.info(f"Setting up Storage")
         self._setup_storage()
     
-    def new_task(self, task_id, config):
+    def new_task(self, task_id, config, eval=False):
         self.task_id = task_id
         self.actor.new_task(self.task_id)
         self.critic.new_task(self.task_id)
         self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=self.actor_learning_rate)
         self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=self.critic_learning_rate)
-        self.env.reset_motion_file(config)
-        _ = self.env.reset_all()
+        if eval is False:
+            self.env.reset_motion_file(config)
+            _ = self.env.reset_all()
         
 
     def _setup_models_and_optimizer(self):
@@ -189,8 +190,9 @@ class PnnPPO(BaseAlgo):
         if ckpt_path is not None:
             logger.info(f"Loading checkpoint from {ckpt_path}")
             loaded_dict = torch.load(ckpt_path, map_location=self.device)
-            self.actor.load_state_dict(loaded_dict["actor_model_state_dict"])
-            self.critic.load_state_dict(loaded_dict["critic_model_state_dict"])
+            logger.critical(loaded_dict["actor_model_state_dict"].keys())
+            self.actor.load_state_dict(loaded_dict["actor_model_state_dict"], strict=False)
+            self.critic.load_state_dict(loaded_dict["critic_model_state_dict"], strict=False)
             if self.load_optimizer:
                 self.actor_optimizer.load_state_dict(loaded_dict["actor_optimizer_state_dict"])
                 self.critic_optimizer.load_state_dict(loaded_dict["critic_optimizer_state_dict"])
